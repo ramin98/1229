@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>HELLO</h1>
+    <form action="/search" method="get">
+        <input type="text" name="position">
+        <button>SEARCH</button>
+    </form>
+    <form action="/submit" method="post">
+        <input type="text" name="username" placeholder="Введите ваше имя">
+        <button type="submit">Отправить</button>
+    </form>
+    <form action="/upload-file" method="post" enctype="multipart/form-data">
+        <input type="file" name="my-file" placeholder="Введите ваше имя" multiple>
+        <button type="submit">Отправить</button>
+    </form>
+    <img src="http://localhost:3000/static/1718387187150.jpeg">
+    <script>
+        // document.querySelector('form'). addEventListener('submit', (ev) => {
+        //     ev.preventDefault()
+        //     console.log('ok')
+        // })
+    </script>
+</body>
+</html>
