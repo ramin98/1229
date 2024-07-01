@@ -2,6 +2,24 @@ let friendsList = ['Taleh', 'Tamerlan', 'Alexandr']
 let me = 'Ramin'
 let friends = document.getElementById('friends')
 
+function chooseChat(friend) {
+    let chatContainer = document.getElementById('chatContainer')
+    chatContainer.innerHTML = `
+    <div id="chat">
+        <ul id="chatList"></ul>
+    </div>
+    <form id="fromMeForm">
+        <input type="text" id="fromMeInput">
+        <input type="file" name='files' id="photoInput">
+        <button>SEND TO ${friend}</button>
+    </form>
+    <form id="fromFriendForm">
+        <input type="text" id="toFriendInput">
+        <input type="file" name='files' id="photoInput">
+        <button>SEND TO ${me}</button>
+    </form>`
+}
+
 function getDate() {
     let date = new Date()
     let year = date.getFullYear()
@@ -26,7 +44,6 @@ function showMessages(arr) {
 
 function savePhoto(fileInput) {
     const files = fileInput.files[0];
-    console.log(files);
 
     const formData = new FormData();
     formData.append("files", files);
@@ -39,8 +56,10 @@ function savePhoto(fileInput) {
 friendsList.forEach((item) => {
     let li = document.createElement('li')
     li.innerHTML = `<button>${item}</button>`
+
     li.addEventListener('click', () => {
         chooseChat(item)
+
         fetch('/create-or-choose-chat', {
             method: "POST",
             headers: {
@@ -57,11 +76,9 @@ friendsList.forEach((item) => {
                     console.log(data.text)
                 }
             })
+
         let fromMeForm = document.getElementById('fromMeForm')
         let fromFriendForm = document.getElementById('fromFriendForm')
-        console.log(fromMeForm)
-        console.log(fromFriendForm)
-
 
         fromMeForm.addEventListener('submit', (ev) => {
             ev.preventDefault()
@@ -74,6 +91,7 @@ friendsList.forEach((item) => {
                 time: getDate(),
                 chat: me + "and" + item
             }
+
             fetch('/letter-sending', {
                 method: 'POST',
                 headers: {
@@ -87,9 +105,9 @@ friendsList.forEach((item) => {
                         showMessages(data)
                     }
                 })
+
             let fileInput = document.querySelector('#fromMeForm input[type="file"]');
             savePhoto(fileInput)
-
         })
 
         fromFriendForm.addEventListener('submit', (ev) => {
@@ -103,6 +121,7 @@ friendsList.forEach((item) => {
                 time: getDate(),
                 chat: me + "and" + item
             }
+
             fetch('/letter-sending', {
                 method: 'POST',
                 headers: {
@@ -119,27 +138,10 @@ friendsList.forEach((item) => {
 
             let fileInput = document.querySelector('#fromFriendForm input[type="file"]');
             savePhoto(fileInput)
-
         })
     })
+    
     friends.appendChild(li)
 })
 
-function chooseChat(friend) {
-    let chatContainer = document.getElementById('chatContainer')
-    chatContainer.innerHTML = `
-<div id="chat">
-    <ul id="chatList"></ul>
-</div>
-<form id="fromMeForm">
-    <input type="text" id="fromMeInput">
-    <input type="file" name='files' id="photoInput">
 
-    <button>SEND TO ${friend}</button>
-</form>
-<form id="fromFriendForm">
-    <input type="text" id="toFriendInput">
-    <input type="file" name='files' id="photoInput">
-    <button>SEND TO ${me}</button>
-</form>`
-}
