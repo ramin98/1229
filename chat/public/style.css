@@ -1,0 +1,14 @@
+#chatList{
+    display: flex;
+    width: 400px;
+    flex-direction: column;
+}
+
+.from{
+    align-self: flex-end;
+    background-color: aqua;
+}
+.to{
+    align-self: flex-start;
+    background-color: green;
+}
