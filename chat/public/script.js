@@ -1,7 +1,40 @@
 let friendsList = ['Taleh', 'Tamerlan', 'Alexandr']
 let me = 'Ramin'
-
 let friends = document.getElementById('friends')
+
+function getDate() {
+    let date = new Date()
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+    let hour = date.getHours()
+    let minutes = date.getMinutes()
+    let seconds = date.getSeconds()
+    return `${year}/${month}/${day} - ${hour}:${minutes}:${seconds}`
+}
+
+function showMessages(arr) {
+    let chatList = document.getElementById('chatList')
+    chatList.innerHTML = ''
+    arr.forEach((item) => {
+        let li = document.createElement('li')
+        li.classList.add(item.from === me ? 'from' : 'to')
+        li.innerText = item.letter + '---' + item.time
+        chatList.appendChild(li)
+    })
+}
+
+function savePhoto(fileInput) {
+    const files = fileInput.files[0];
+    console.log(files);
+
+    const formData = new FormData();
+    formData.append("files", files);
+    fetch('/save-photo', {
+        method: 'POST',
+        body: formData
+    })
+}
 
 friendsList.forEach((item) => {
     let li = document.createElement('li')
@@ -18,18 +51,8 @@ friendsList.forEach((item) => {
             .then(res => res.json())
             .then(data => {
                 console.log(data)
-                let chatList = document.getElementById('chatList')
-                chatList.innerHTML = ''
                 if (data.array) {
-                    data.array.forEach((item) => {
-                        let li = document.createElement('li')
-                        li.classList.add(item.from === me ? 'from' : 'to')
-
-                        li.innerText = item.letter + '---' + item.time
-                        chatList.appendChild(li)
-                    })
-
-
+                    showMessages(data.array)
                 } else if (data.text) {
                     console.log(data.text)
                 }
@@ -43,18 +66,12 @@ friendsList.forEach((item) => {
         fromMeForm.addEventListener('submit', (ev) => {
             ev.preventDefault()
             let fromMeFormInput = document.querySelector('#fromMeForm input').value
-            let date = new Date()
-            let year = date.getFullYear()
-            let month = date.getMonth() + 1
-            let day = date.getDate()
-            let hour = date.getHours()
-            let minutes = date.getMinutes()
-            let seconds = date.getSeconds()
+
             let fromMeLetter = {
                 letter: fromMeFormInput,
                 from: me,
                 to: item,
-                time: `${year}/${month}/${day} - ${hour}:${minutes}:${seconds}`,
+                time: getDate(),
                 chat: me + "and" + item
             }
             fetch('/letter-sending', {
@@ -66,50 +83,24 @@ friendsList.forEach((item) => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    let chatList = document.getElementById('chatList')
                     if (data) {
-                        chatList.innerHTML = ''
-
-                        data.forEach((item) => {
-                            let li = document.createElement('li')
-                            li.classList.add(item.from === me ? 'from' : 'to')
-
-                            li.innerText = item.letter + '---' + item.time
-                            chatList.appendChild(li)
-                        })
+                        showMessages(data)
                     }
-
-
                 })
             let fileInput = document.querySelector('#fromMeForm input[type="file"]');
-            const files = fileInput.files[0];
-            console.log(files);
-
-            const formData = new FormData();
-            formData.append("files", files);
-            fetch('/save-photo', {
-                method: 'POST',
-                body: formData
-            })
+            savePhoto(fileInput)
 
         })
 
         fromFriendForm.addEventListener('submit', (ev) => {
             ev.preventDefault()
             let fromFriendInput = document.querySelector('#fromFriendForm input').value
-            let date = new Date()
-            let year = date.getFullYear()
-            let month = date.getMonth() + 1
-            let day = date.getDate()
-            let hour = date.getHours()
-            let minutes = date.getMinutes()
-            let seconds = date.getSeconds()
 
             let fromFriendLetter = {
                 letter: fromFriendInput,
                 from: item,
                 to: me,
-                time: `${year}/${month}/${day} - ${hour}:${minutes}:${seconds}`,
+                time: getDate(),
                 chat: me + "and" + item
             }
             fetch('/letter-sending', {
@@ -121,32 +112,14 @@ friendsList.forEach((item) => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    let chatList = document.getElementById('chatList')
-
                     if (data) {
-                        chatList.innerHTML = ''
-
-                        data.forEach((item) => {
-
-                            let li = document.createElement('li')
-                            li.classList.add(item.from === me ? 'from' : 'to')
-                            li.innerText = item.letter + '---' + item.time
-                            chatList.appendChild(li)
-                        })
+                        showMessages(data)
                     }
-
-
                 })
-            let fileInput = document.querySelector('#fromFriendForm input[type="file"]');
-            const files = fileInput.files[0];
-            console.log(files);
 
-            const formData = new FormData();
-            formData.append("files", files);
-            fetch('/save-photo', {
-                method: 'POST',
-                body: formData
-            })
+            let fileInput = document.querySelector('#fromFriendForm input[type="file"]');
+            savePhoto(fileInput)
+
         })
     })
     friends.appendChild(li)
