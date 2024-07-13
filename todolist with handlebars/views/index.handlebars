@@ -1,0 +1,21 @@
+<h1>{{title}}</h1>
+
+<form action="/add" method="post">
+    <div class="form-group">
+        <label for="task">New Task</label>
+        <input type="text" class="form-control" name="task" id="task" placeholder="Enter your task">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+<ul class="list-group mt-4">
+    {{#each tasks}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{this}}</span>
+            <form action="/delete" method="post" style="display: inline;">
+                <input type="hidden" name="index" value="{{@index}}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </li>
+    {{/each}}
+</ul>
