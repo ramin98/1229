@@ -2,6 +2,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('and', function(a, b) {
+  return a && b;
+});
+
+Handlebars.registerHelper('equal', function(a, b) {
+    return a === b;
+  });
+
+Handlebars.registerHelper('or', function(a, b) {
+  return a || b;
+});
+
+
 const app = express();
 const port = 4000;
 
